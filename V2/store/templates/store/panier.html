@@ -1,0 +1,140 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}
+Panier
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+{% endblock %}
+
+{% block scriptJs %}
+<script type="text/javascript">
+    var user = '{{request.user}}'
+
+    function getToken(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getToken('csrftoken');
+    const urlUpdateItem = "{% url 'store:panierModifierQuantite'%}"
+</script>
+{% endblock %}
+
+{% block active_panier%}
+active
+{% endblock %}
+
+{% block content %}
+<div class="col-lg-12">
+    <br>
+    <br>
+    {% if messages %}
+    <div class="alert alert-success">
+    {% for message in messages %}
+        {{message}}
+        <br>
+    {% endfor %}
+    </div>
+    {% endif %}
+    <div class="box-element">
+        <a class="btn btn-outline-dark" href="{% url 'store:rayons' %}">&#x2190; Continuer mes achats</a>
+
+        <br>
+        <br>
+
+        <table class="table">
+            <tr>
+                <th>
+                    <h5>Articles: <strong>{{commande.get_cart_items}}</strong> dont {{produits.count}} différent{% if produits.count > 1 %}s{% endif %}</h5>
+                </th>
+                <th>
+                    <h5>Total: <strong>{{commande.get_cart_total}}€</strong></h5>
+                </th>
+                <th>
+                    {% if user.is_authenticated %}
+                    {% if produits %}
+                    <form method="POST">
+                        {% csrf_token %}
+                        <button class="btn btn-success" type="submit">
+                            Payer
+                        </button>
+                    </form>
+                    {% else %}
+                    <a style="float:right; margin: 5px;" class="btn btn-secondary disabled" href="">Payer</a>
+                    {% endif %}
+                    {% else %}
+                    <a href="{% url 'accounts:login' %}" class="btn btn-success">Se connecter</a>
+                    {% endif %}
+                </th>
+            </tr>
+        </table>
+    </div>
+
+    <br>
+
+    <div class="box-element">
+        {% if produits %}
+        <div class="cart-row">
+            <div style="flex:2"><strong>Image</strong></div>
+            <div style="flex:2"><strong>Article</strong></div>
+            <div style="flex:1"><strong>Prix</strong></div>
+            <div style="flex:1"><strong>Quantité</strong></div>
+            <div style="flex:1"><strong>Total</strong></div>
+        </div>
+
+        {% for commande_produit in produits %}
+        <div class="cart-row">
+            <div style="flex:2"><a href="{% url 'store:produit_detail' commande_produit.produit.id %}"><img
+                        src="{{commande_produit.produit.image}}" alt="{{produit.id_produit.nom}}" height="75"
+                        width="75"></a></div>
+            <div style="flex:2">
+                <p>{{commande_produit.produit.nom}}</p>
+            </div>
+            <div style="flex:1">
+                <p>{{commande_produit.produit.prix}}€</p>
+            </div>
+            <div style="flex:1">
+                <p class="quantity">{{commande_produit.quantite}}</p>
+                <div class="quantity">
+                    {% if commande_produit.quantite < commande_produit.produit.stock %} <img
+                        data-product="{{commande_produit.produit.id}}" data-action="add"
+                        src="{% static 'store/images/up-arrow.png' %}" alt="" class="chg-quantity update-cart">
+                        {% endif %}
+                        <img data-product="{{commande_produit.produit.id}}" data-action="delete"
+                            src="{% static 'store/images/down-arrow.png' %}" alt="" class="chg-quantity update-cart">
+                </div>
+            </div>
+            <div style="flex:1">
+                <p>{{commande_produit.calcPrixTotal}}€</p>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="cart-row justify-content-md-center">
+            <p><strong>Votre panier est vide !</strong></p>
+        </div>
+        {% endif %}
+    </div>
+
+    <br>
+</div>
+
+{% endblock %}
+
+{% block linkJs %}
+<script type="text/javascript" src="{% static 'store/js/cart.js' %}"></script>
+{% endblock %}

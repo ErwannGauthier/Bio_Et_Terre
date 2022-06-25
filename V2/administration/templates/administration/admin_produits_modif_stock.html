@@ -1,0 +1,42 @@
+{% extends 'administration/admin_base.html' %}
+
+{% block title %}
+Modif stock
+{% endblock %}
+
+{% block active_produits %}
+active
+{% endblock %}
+
+{% load static %}
+
+{% block content %}
+<div class="col-md-8 offset-md-2 pt-5">
+    <div class="py-3">
+        <h3>Modifier le stock</h3>
+        <hr>
+        <form method="POST">
+            {% csrf_token %}
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning">
+                {{message}}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="pb-3">
+                <label for="stock">Quantité en stock</label>
+                <br>
+                <input class="form-control" id="stock" type="number" step="1" min="0" value="{{ produit.stock }}" name="stock"
+                    placeholder="Entrer la quantité en stock du produit..." autocomplete="off" required="required">
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-outline-primary" type="submit">Modifier</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

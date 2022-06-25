@@ -1,0 +1,134 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}
+Modif catégorie
+{% endblock %}
+
+{% block active_categories %}
+active
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 offset-md-2 pt-5">
+    <div class="py-3">
+        <h3>Modifier la catégorie</h3>
+        <hr>
+        Nom
+        <input class="form-control input_new_categorie" id="input_new_categorie_nom" type="text"
+            placeholder="{{ categorie.nom }}" autocomplete="off">
+
+        <br>
+
+        TVA
+        <input class="form-control input_new_categorie" id="input_new_categorie_tva" type="number" step="0.01" min="0"
+            placeholder="{{ categorie.tauxtva }}" autocomplete="off">
+
+        <br>
+
+        Image
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="col-md-10">
+                <input class="form-control input_new_categorie" id="input_new_categorie_image" type="text"
+                    placeholder="{{ categorie.image }}" autocomplete="off">
+            </div>
+            <div class="col-md-2">
+                <img id="categorie-img" src="{{ categorie.image }}" alt="Entrer un lien pour afficher l'image"
+                    title="Pré-visualisation" width="100">
+            </div>
+        </div>
+
+        <br>
+        <div class="text-center">
+            <button id="modif" class="btn btn-outline-warning">Modifier</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function getToken(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getToken('csrftoken');
+
+    const url = "{% url 'admin:update_categories' %}";
+    var url_redirection = "{% url 'admin:categories' %}"
+
+    // VARIABLE PRODUIT
+    var categorie_id = "{{ categorie.id }}";
+    var categorie_nom = "{{ categorie.nom }}";
+    var categorie_tva = "{{ categorie.tauxtva }}";
+    var categorie_image = "{{ categorie.image }}";
+
+    // VARIABLE BOUTON MODIFICATION
+    var modif = document.getElementById("modif");
+
+    // VARIABLES CATEGORIE
+    var input_new_categorie_nom = document.getElementById("input_new_categorie_nom");
+    var input_new_categorie_tva = document.getElementById("input_new_categorie_tva");
+    var input_new_categorie_image = document.getElementById("input_new_categorie_image");
+    // LISTENER IMAGE CATEGORIE INTERACTIVE
+    input_new_categorie_image.addEventListener('input', function () {
+        var categorie_img = document.getElementById("categorie-img");
+        categorie_img.src = this.value;
+        categorie_img.alt = "Erreur de chargement de l'image."
+    })
+
+    // VERIFICATION DES VARIABLES AVANT VALIDATION
+    modif.addEventListener('click', function () {
+        if (input_new_categorie_nom.value != "") {
+            categorie_nom = input_new_categorie_nom.value;
+        }
+        if (input_new_categorie_tva.value != "") {
+            categorie_tva = input_new_categorie_tva.value;
+        }
+        if (input_new_categorie_image.value != "") {
+            categorie_image = input_new_categorie_image.value;
+        }
+
+        var changer = !(categorie_nom == "{{ categorie.nom }}" && categorie_tva == "{{ categorie.tauxtva }}" &&
+            categorie_image == "{{ categorie.image }}");
+        update(changer);
+    });
+
+    function update(changer) {
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    'id': categorie_id,
+                    'nom': categorie_nom,
+                    'tva': categorie_tva.replaceAll(',', '.'),
+                    'image': categorie_image.replaceAll('&amp;', '&'),
+                    'changer': changer
+                })
+            })
+
+            .then((response) => {
+                return response.json()
+            })
+
+            .then((data) => {
+                location.replace(url_redirection);
+            })
+    }
+</script>
+{% endblock %}

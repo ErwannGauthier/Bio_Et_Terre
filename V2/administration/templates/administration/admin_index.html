@@ -1,0 +1,72 @@
+{% extends 'administration/admin_base.html' %}
+{% load static %}
+{% block title %}
+Index
+{% endblock %}
+
+{% block active_accueil %}
+active
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8 offset-md-2 pt-5">
+    <h2>Bonjour M. {{request.user.last_name|upper}},</h2>
+    <p class="py-3">Que souhaitez-vous faire ?</p>
+</div>
+<br>
+<div class="card ms-auto me-4 my-4" style="width: 12rem;">
+    <a href="{% url 'administration:produits' %}">
+        <div class="card-image">
+            <img src="{% static 'administration/images/admin_index_produits.png' %}" class="card-img-top" alt="Produits" width="150">
+        </div>
+    </a>
+    <div class="card-heading pt-2">
+        <div class="card-title text-center d-flex justify-content-center">
+            <h4>Produits</h4>
+        </div>
+    </div>
+    <a href="{% url 'administration:produits' %}" class="btn btn-dark d-flex justify-content-center my-2">Consulter</a>
+</div>
+
+<div class="card m-auto my-4" style="width: 12rem;">
+    <a href="{% url 'administration:categories' %}">
+        <div class="card-image">
+            <img src="{% static 'administration/images/admin_index_rayons.png' %}" class="card-img-top" alt="Produits" width="150">
+        </div>
+    </a>
+    <div class="card-heading pt-2">
+        <div class="card-title text-center d-flex justify-content-center">
+            <h4>Catégories</h4>
+        </div>
+    </div>
+    <a href="{% url 'administration:categories' %}" class="btn btn-dark d-flex justify-content-center my-2">Consulter</a>
+</div>
+
+<div class="card m-auto my-4" style="width: 12rem;">
+    <a href="{% url 'administration:marques' %}">
+        <div class="card-image">
+            <img src="{% static 'administration/images/admin_index_marques.png' %}" class="card-img-top" alt="Produits" width="150">
+        </div>
+    </a>
+    <div class="card-heading pt-2">
+        <div class="card-title text-center d-flex justify-content-center">
+            <h4>Marques</h4>
+        </div>
+    </div>
+    <a href="{% url 'administration:marques' %}" class="btn btn-dark d-flex justify-content-center my-2">Consulter</a>
+</div>
+
+<div class="card ms-4 me-auto my-4" style="width: 12rem;">
+    <a href="{% url 'administration:clients' %}">
+        <div class="card-image">
+            <img src="{% static 'administration/images/admin_index_clients.png' %}" class="card-img-top" alt="Produits" width="150">
+        </div>
+    </a>
+    <div class="card-heading pt-2">
+        <div class="card-title text-center d-flex justify-content-center">
+            <h4>Clients</h4>
+        </div>
+    </div>
+    <a href="{% url 'administration:clients' %}" class="btn btn-dark d-flex justify-content-center my-2">Consulter</a>
+</div>
+{% endblock %}

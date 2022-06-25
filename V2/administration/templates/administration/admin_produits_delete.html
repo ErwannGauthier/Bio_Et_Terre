@@ -1,0 +1,27 @@
+{% extends 'administration/admin_base.html' %}
+
+{% block title %}
+Supprimer catégorie
+{% endblock %}
+
+{% block active_produits %}
+active
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8 col-md-offset-2">
+    <div class="py-3">
+        <h3>Supprimer le produit: {{ produit.nom }} </h3>
+        <hr>
+        <div id="message_erreur" class="py-3 alert alert-warning">
+            Etes-vous sûr de vouloir supprimer ce produit ? 
+            <br>
+            Le produit ne sera plus disponible à l'achat pour les clients après cela.
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <button id="btn-suppr" class="btn btn-outline-danger">Supprimer</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

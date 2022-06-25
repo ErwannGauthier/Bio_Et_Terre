@@ -1,0 +1,41 @@
+{% extends 'administration/admin_base.html' %}
+
+{% block title %}
+Modif marque
+{% endblock %}
+
+{% block active_marques %}
+active
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 offset-md-2 pt-5">
+    <div class="py-3">
+        <h3>Modifier la marque</h3>
+        <hr>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning">
+                {{message}}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="pb-3">
+                <label for="nom">Nom</label>
+                <br>
+                <input class="form-control" id="nom" type="text" name="nom" placeholder="Entrer le nom de la marque..."
+                    autocomplete="off" required="required" value="{{marque.nom}}">
+            </div>
+            <div class="text-center">
+                <button class="btn btn-outline-warning" type="submit">Modifier</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

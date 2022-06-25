@@ -1,0 +1,58 @@
+{% extends 'store/base.html' %}
+
+{% block title %}S'inscrire{% endblock %}
+
+{% block content %}
+<div class="col-md-6 offset-3 py-5">
+    <h3>S'inscrire</h3>
+    <hr>
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning">
+            {{message}}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="pb-3">
+            <label for="firstname">Prénom</label>
+            <br>
+            <input class="form-control" id="firstname" type="text" name="firstname" placeholder="Entrez votre prénom..." autocomplete="off" required="required">
+        </div>
+
+        <div class="pb-3">
+            <label for="lastname">Nom</label>
+            <br>
+            <input class="form-control" id="lastname" type="text" name="lastname" placeholder="Entrez votre nom..." autocomplete="off" required="required">
+        </div>
+
+        <div class="pb-3">
+            <label for="email">Adresse mail</label>
+            <br>
+            <input class="form-control" id="email" type="email" name="email" placeholder="Entrez votre adresse mail..." autocomplete="off" required="required">
+        </div>
+
+        <div class="pb-3">
+            <label for="password">Mot de passe</label>
+            <br>
+            <input class="form-control" id="password" type="password" name="password" placeholder="Entrez votre mot de passe..." autocomplete="off" required="required">
+        </div>
+
+        <div class="pb-3">
+            <label for="confirm_password">Confirmer mot de passe</label>
+            <br>
+            <input class="form-control" id="confirm_password" type="password" name="confirm_password" placeholder="Confirmez votre mot de passe..." autocomplete="off" required="required">
+        </div>
+
+        <button class="btn btn-primary btn-block" type="submit">S'inscrire</button>
+    </form>
+
+    <div class="py-3">
+        <a href="{% url 'accounts:login' %}">J'ai déjà un compte...</a>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,125 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}
+Detail
+{% endblock %}
+
+{% block active_produits %}
+active
+{% endblock %}
+
+{% block content %}
+<section>
+    <div class="container-fluid px-xl-7 pt-5 pb-3 pb-lg-6">
+        <ul class="breadcrumb undefined">
+            <li class="breadcrumb-item"><a href="{% url 'admin:index' %}">Accueil</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'admin:produits' %}">Produits</a></li>
+            <li class="breadcrumb-item active">{{ produit.nom }}</li>
+        </ul>
+        <div class="row">
+            <div class="col-lg-6 col-xl-7 pt-4 order-2 order-lg-1 photoswipe-gallery">
+                <div data-toggle="zoom" style="position: relative; overflow: hidden;">
+                    <img class="img-fluid" src="{{ produit.image }}" alt="{{ produit.nom }}">
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-4 pt-4 order-1 order-lg-2 ms-lg-auto">
+                <div class="sticky-top" style="top: 100px;">
+                    <h2 class="mb-4">{{ produit.nom }}</h2>
+                    <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4">
+                        <ul class="list-inline mb-2 mb-sm-0">
+                            {% with type=produit.calcPrixType %}
+                            <li class="list-inline-item h4 fw-light mb-0">{{ produit.marque.nom }} -</li>
+                            <li class="list-inline-item h4 fw-light mb-0">
+                                {% if type.2 > 0 %}
+                                {{ type.2 }}
+                                {% endif %} {{ type.3 }}
+                            </li><br>
+                            <li class="list-inline-item h4 fw-light mb-0">{{ produit.calcTVA }}€ -</li>
+                            <li class="list-inline-item h4 fw-light mb-0">{{ type.0 }}€/{{ type.1 }}</li>
+                            {% endwith %}
+                        </ul>
+                        <div class="d-flex align-items-center text-sm">
+                            <ul class="list-inline me-2 mb-0">
+                                <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                                <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                                <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                                <li class="list-inline-item me-0"><i class="fa fa-star text-primary"></i></li>
+                                <li class="list-inline-item me-0"><i class="fa fa-star text-gray-300"></i></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <p class="mb-4 text-muted">{{ produit.descript }}</p>
+                    {% if produit.achetable == 1 %}
+                    <ul class="list-inline mb-2 mb-sm-0">
+                        <li class="list-inline-item fw-light mb-0">En stock: {{ produit.qtt_stock }}</li>
+                        <li class="list-inline-item fw-light mb-0"><a
+                                href="{% url 'admin:produits_modif_stock' produit.id %}"
+                                class="btn btn-outline-primary">Modifier
+                                le stock</a></li>
+                    </ul>
+                    <div class="py-3">
+                        <a href="{% url 'admin:produits_modif' produit.id %}" class="btn btn-outline-warning">Modifier
+                            le produit</a>
+                        <br>
+                        <br>
+                        <a id="supprimer" class="btn btn-outline-danger">Supprimer</a>
+                    </div>
+                    {% else %}
+                    <h3 class="text-danger">Ce produit n'est plus disponible.</h3>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block script %}
+<script>
+    function getToken(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getToken('csrftoken');
+
+    const url = "{% url 'admin:delete' %}";
+
+    var btnSuppr = document.getElementById("supprimer")
+    btnSuppr.addEventListener('click', function(){
+        suppr();
+    })
+
+    function suppr() {
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    'id': "{{ produit.id }}"
+                })
+            })
+
+            .then((response) => {
+                return response.json()
+            })
+
+            .then((data) => {
+                location.reload()
+            })
+    }
+</script>
+{% endblock %}

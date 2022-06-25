@@ -1,0 +1,33 @@
+{% extends 'administration/admin_base.html' %}
+
+{% block title %}
+Ajouter marque
+{% endblock %}
+
+{% block active_marques %}
+active
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 offset-md-2 pt-5">
+    <div class="py-3">
+        <h3>Ajouter une marque</h3>
+        <hr>
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="pb-3">
+                <label for="nom">Nom</label>
+                <br>
+                <input class="form-control" id="nom" type="text" name="nom" placeholder="Entrer le nom de la marque..."
+                    autocomplete="off" required="required">
+            </div>
+            <div class="text-center">
+                <button class="btn btn-outline-success" type="submit">Ajouter</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

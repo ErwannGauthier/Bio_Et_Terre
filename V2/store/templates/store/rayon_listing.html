@@ -1,0 +1,80 @@
+{% extends 'store/base.html' %}
+
+{% block title %}
+Rayon {{ produits.0.categorie.nom }}
+{% endblock %}
+
+{% block active_rayons%}
+active
+{% endblock %}
+
+{% block content %}
+
+<div class="container-fluid px-xl-7 pt-5 pb-3 pb-lg-6">
+    <ul class="breadcrumb undefined">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">Accueil</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'store:rayons' %}">Rayons</a></li>
+        <li class="breadcrumb-item active">{{ produits.0.categorie.nom }}</li>
+    </ul>
+    <div class="dropdown">
+      <a class="btn btn-outline-dark dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+        Trier le rayon
+      </a>
+
+      <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+        <li><a class="dropdown-item" href="?q=nom">&darr; Nom croissant (A-Z)</a></li>
+        <li><a class="dropdown-item" href="?q=-nom">&uarr; Nom décroissant (Z-A)</a></li>
+        <li><a class="dropdown-item" href="?q=prix">&darr; Prix croissant</a></li>
+        <li><a class="dropdown-item" href="?q=-prix">&uarr; Prix décroissant</a></li>
+      </ul>
+    </div>
+</div>
+
+{% if produits %}
+<div class="container">
+    <div class="row gy-4">
+        {% for produit in produits %}
+
+        <div class="col-sm">
+            <div class="card h-100">
+                <a href="{% url 'store:produit_detail' produit.id %}">
+                    <img src="{{produit.image}}" class="card-img-top" alt="{{produit.nom}}"
+                        style="width: 200px; height: 200px; object-fit: cover;">
+                </a>
+                <div class=" card-body">
+                    <h5 class="card-title fw-bold">{{produit.nom}}</h5>
+                    <p class="card-text">{{produit.marque.nom}}</p>
+                    <span class="fw-bold">{{ produit.calcTVA }}€/{{ produit.getPoids }}</span>
+                    <br>
+                    <span class="text-muted">{{ produit.calcPrixPoids }}</span>
+                </div>
+                <div class="d-grid gap-2">
+                    <a class="btn btn-lg btn-outline-dark" href="{% url 'store:produit_detail' produit.id %}"
+                        role="button">Acheter</a>
+                </div>
+            </div>
+        </div>
+
+        {% endfor %}
+    </div>
+</div>
+{% else %}
+<div class="row justify-content-md-center">
+    <div class="col-md-8 col-md-offset-2 mb-5 text-center">
+        <p>Il semblerait que ce rayon soit victime de son succès ! Aucun article n’est disponible ici...</p>
+        <img src="https://c.tenor.com/tlYo239ITUMAAAAM/sad-tears.gif" alt="GIF Triste">
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+{% block linkJs %}
+<script>
+    var cards = document.getElementsByClassName("card")
+    var card0_width = cards[0].clientWidth
+    for(var i = 0; i < cards.length; i++){
+        console.log(window.getComputedStyle(cards[i], null).getPropertyValue('padding-right'))
+        cards[i].style.width = card0_width + "px";
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'administration/admin_base.html' %}
+
+{% block title %}
+Supprimer catégorie
+{% endblock %}
+
+{% block active_categories %}
+active
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8 col-md-offset-2">
+    <div class="py-3">
+        <h3>Supprimer la catégorie: {{ categorie.nom }} </h3>
+        <hr>
+        {% if produits|length > 0 %}
+        <div id="message_erreur" class="py-3 alert alert-danger">
+            Vous ne pouvez pas supprimer la catégorie car elle est déjà utilisée par des produits.
+        </div>
+        {% else %}
+        <div id="message_erreur" class="py-3 alert alert-warning">
+            Etes-vous sûr de vouloir supprimer cette catégorie ?
+        </div>
+        <form method="POST">
+            {% csrf_token %}
+            <button id="btn-suppr" class="btn btn-outline-danger">Supprimer</button>
+        </form>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

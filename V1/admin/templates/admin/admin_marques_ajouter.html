@@ -1,0 +1,106 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}
+Ajouter marque
+{% endblock %}
+
+{% block active_marques %}
+active
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 offset-md-2 pt-5">
+    <div class="py-3">
+        <h3>Ajouter une marque</h3>
+        <hr>
+        Nom
+        <input class="form-control" id="name" type="text" placeholder="Entrer le nom de la marque..." autocomplete="off">
+
+        <br>
+        <div id="message_erreur" class="py-3 alert alert-danger" style="display: none;">
+            Vous devez renseigner tous les champs pour pouvoir ajouter le produit.
+        </div>
+
+        <div class="text-center">
+            <button id="ajouter" class="btn btn-outline-success">Ajouter</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function getToken(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getToken('csrftoken');
+
+    const url = "{% url 'admin:add_marques' %}";
+    const url_redirection = "{% url 'admin:marques' %}";
+    
+
+    // VARIABLE MARQUE
+    var marque_nom;
+
+    // VARIABLES INPUT
+    var input_nom = document.getElementById("name");
+
+    // VARIABLE BOUTON MODIFICATION
+    var ajouter = document.getElementById("ajouter");
+
+    // LISTENER VERIFIE TOUT LES CHAMPS SONT REMPLIS
+    input_nom.addEventListener('input', function () {
+        if (this.value != "") {
+            ajouter.disabled = false;
+        } else {
+            ajouter.disabled = true;
+        }
+    });
+
+    // VERIFICATION DES VARIABLES AVANT VALIDATION
+    ajouter.addEventListener('click', function () {
+        if (input_nom.value != "") {
+            marque_nom = input_nom.value;
+            add();
+        } else {
+            var message_erreur = document.getElementById("message_erreur");
+            message_erreur.style = "display: true;"
+        }
+    });
+
+    function add() {
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    'nom': marque_nom
+                })
+            })
+
+            .then((response) => {
+                return response.json()
+            })
+
+            .then((data) => {
+                location.replace(url_redirection)
+            })
+    }
+</script>
+{% endblock %}

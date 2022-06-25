@@ -1,0 +1,68 @@
+{% extends 'administration/admin_base.html' %}
+
+{% block title %}
+Modif catégorie
+{% endblock %}
+
+{% block active_categories %}
+active
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 offset-md-2 pt-5">
+    <div class="py-3">
+        <h3>Modifier la catégorie</h3>
+        <hr>
+        <form method="POST">
+            {% csrf_token %}
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning">
+                {{message}}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="pb-3">
+                <label for="nom">Nom</label>
+                <br>
+                <input class="form-control" id="nom" type="text" name="nom"
+                    placeholder="Entrer le nom de la catégorie..." autocomplete="off" required="required"
+                    value="{{categorie.nom}}">
+            </div>
+            <div class="pb-3">
+                <label for="nom">Taux TVA (en %)</label>
+                <br>
+                <input class="form-control" id="taux_tva" type="number" step="0.01" min="0" name="taux_tva"
+                    placeholder="Entrer le taux tva de la catégorie..." autocomplete="off" required="required"
+                    value="{{categorie.taux_tva}}">
+            </div>
+            <div class="pb-3">
+                <label for="nom">Image</label>
+                <br>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="col-md-9">
+                        <input class="form-control input_new_categorie" id="image_categorie" type="text" name="image"
+                            placeholder="Entrer l'URL de l'image de la categorie..." autocomplete="off"
+                            required="required" value="{{categorie.image}}">
+                    </div>
+                    <div class="col-md-2 offset-md-1 border border-dark">
+                        <img id="categorie-img" src="" alt="Entrer un lien pour afficher l'image"
+                            title="Pré-visualisation" width="100">
+                    </div>
+                </div>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-outline-warning" type="submit">Modifier</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+{% load static %}
+<script src="{% static 'administration/js/image_categorie.js' %}"></script>
+{% endblock %}

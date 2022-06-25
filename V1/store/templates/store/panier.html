@@ -1,0 +1,87 @@
+{% extends 'store/base.html' %}
+
+{% block title %}
+Panier
+{% endblock %}
+
+{% block active_panier%}
+active
+{% endblock %}
+
+{% block content %}
+{% load static %}
+<div class="col-lg-12">
+    <br>
+    <br>
+
+    <div class="box-element">
+        <a class="btn btn-outline-dark" href="{% url 'store:rayon' %}">&#x2190; Continuer mes achats</a>
+
+        <br>
+        <br>
+
+        <table class="table">
+            <tr>
+                <th>
+                    <h5>Articles: <strong>{{commande.get_cart_items}}</strong> dont {{produits.count}} différent{% if produits.count > 1 %}s{% endif %}</h5>
+                </th>
+                <th>
+                    <h5>Total: <strong>{{commande.get_cart_total}}€</strong></h5>
+                </th>
+                <th>
+                    {% if produits %}
+                    <a style="float:right; margin: 5px;" class="btn btn-success" href="{% url 'store:valider_commande' %}">Payer</a>
+                    {% else %}
+                    <a style="float:right; margin: 5px;" class="btn btn-secondary disabled" href="">Payer</a>
+                    {% endif %}
+                </th>
+            </tr>
+        </table>
+    </div>
+
+    <br>
+
+    <div class="box-element">
+        {% if produits %}
+        <div class="cart-row">
+            <div style="flex:2"><strong>Image</strong></div>
+            <div style="flex:2"><strong>Article</strong></div>
+            <div style="flex:1"><strong>Prix</strong></div>
+            <div style="flex:1"><strong>Quantité</strong></div>
+            <div style="flex:1"><strong>Total</strong></div>
+        </div>
+
+        {% for produit in produits %}
+        <div class="cart-row">
+            <div style="flex:2"><a href="{% url 'store:detail' produit.id_produit.id %}"><img src="{{produit.id_produit.image}}" alt="{{produit.id_produit.nom}}" height="75" width="75"></a></div>
+            <div style="flex:2">
+                <p>{{produit.id_produit.nom}}</p>
+            </div>
+            <div style="flex:1">
+                <p>{{produit.id_produit.prix}}€</p>
+            </div>
+            <div style="flex:1">
+                <p class="quantity">{{produit.quantite}}</p>
+                <div class="quantity">
+                    {% if produit.quantite < produit.id_produit.qtt_stock %}
+                    <img data-product="{{produit.id_produit.id}}" data-action="add" src="{% static 'store/up-arrow.png' %}" alt="" class="chg-quantity update-cart">
+                    {% endif %}
+                    <img data-product="{{produit.id_produit.id}}" data-action="delete" src="{% static 'store/down-arrow.png' %}" alt="" class="chg-quantity update-cart">
+                </div>
+            </div>
+            <div style="flex:1">
+                <p>{{produit.calcPrixTotal}}€</p>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="cart-row justify-content-md-center">
+            <p><strong>Votre panier est vide !</strong></p>
+        </div>
+        {% endif %}
+    </div>
+
+    <br>
+</div>
+
+{% endblock %}

@@ -1,0 +1,76 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}
+Historique Commande
+{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'store/css/style.css' %}">
+{% endblock %}
+
+{% block active_panier%}
+active
+{% endblock %}
+
+{% block content %}
+<div class="col-lg-12">
+    <br>
+    <br>
+
+    <div class="box-element">
+        <a class="btn btn-outline-dark" href="{% url 'store:account' %}">&#x2190; Retour sur mon profil</a>
+
+        <br>
+        <br>
+
+        <table class="table">
+            <tr>
+                <th>
+                    <h5>Articles: <strong>{{commande.get_cart_items}}</strong> dont {{produits.count}} différent{% if produits.count > 1 %}s{% endif %}</h5>
+                </th>
+                <th>
+                    <h5>Total: <strong>{{commande.get_cart_total}}€</strong></h5>
+                </th>
+                <th>
+                </th>
+            </tr>
+        </table>
+    </div>
+
+    <br>
+
+    <div class="box-element">
+        <div class="cart-row">
+            <div style="flex:2"><strong>Image</strong></div>
+            <div style="flex:2"><strong>Article</strong></div>
+            <div style="flex:1"><strong>Prix</strong></div>
+            <div style="flex:1"><strong>Quantité</strong></div>
+            <div style="flex:1"><strong>Total</strong></div>
+        </div>
+
+        {% for commande_produit in produits %}
+        <div class="cart-row">
+            <div style="flex:2"><a href="{% url 'store:produit_detail' commande_produit.produit.id %}"><img
+                        src="{{commande_produit.produit.image}}" alt="{{produit.id_produit.nom}}" height="75"
+                        width="75"></a></div>
+            <div style="flex:2">
+                <p>{{commande_produit.produit.nom}}</p>
+            </div>
+            <div style="flex:1">
+                <p>{{commande_produit.produit.prix}}€</p>
+            </div>
+            <div style="flex:1">
+                <p class="quantity">{{commande_produit.quantite}}</p>
+            </div>
+            <div style="flex:1">
+                <p>{{commande_produit.calcPrixTotal}}€</p>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <br>
+</div>
+
+{% endblock %}

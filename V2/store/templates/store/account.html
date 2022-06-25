@@ -1,0 +1,62 @@
+{% extends 'store/base.html' %}
+
+{% block title %}
+Compte
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8 offset-md-2 py-3">
+    <h2>Mon compte</h2>
+    <hr>
+    <div class="pb-3">
+        Prénom
+        <br>
+        <input class="form-control" id="disabledInput" type="text" placeholder="{{ client.first_name|title }}" disabled>
+    </div>
+    <div class="pb-3">
+        Nom
+        <br>
+        <input class="form-control" id="disabledInput" type="text" placeholder="{{ client.last_name|title }}" disabled>
+    </div>
+    <div class="pb-3">
+        Adresse mail
+        <br>
+        <input class="form-control" id="disabledInput" type="text" placeholder="{{ client.email }}" disabled>
+    </div>
+
+    <div class="text-center">
+        <a href="{% url 'accounts:logout' %}" class="btn btn-danger">Me déconnecter</a>
+    </div>
+</div>
+
+<div class="col-md-8 offset-md-2 py-3">
+    <h2>Mes commandes</h2>
+    <hr>
+    {% if commandes %}
+    <table class="table text-center table-striped table-hover">
+        <thead class="thead-dark">
+            <tr>
+                <th>Numéro de commande</th>
+                <th>Date & Heure </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for commande in commandes %}
+            <tr>
+                <td>{{commande.id}}</td>
+                <td>{{commande.date_commande}}</td>
+                <td><a class="btn btn-dark" href="{% url 'store:historiqueCommande' commande.id %}">Consulter</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% else %}
+    <div class="text-center py-3">
+        Vous n'avez passé aucune commande pour le moment.
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

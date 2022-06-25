@@ -1,0 +1,40 @@
+{% extends 'store/base.html' %}
+
+{% block title %}Se connecter{% endblock %}
+
+{% block content %}
+<div class="col-md-6 offset-3 py-5">
+    <h3>Se connecter</h3>
+    <hr>
+    <form method="POST">
+        {% csrf_token %}
+
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-warning">
+            {{message}}
+        </div>
+        {% endfor %}
+        {% endif %}
+
+        <div class="pb-3">
+            <label for="email">Adresse mail</label>
+            <br>
+            <input class="form-control" id="email" type="email" name="email" placeholder="Entrez votre adresse mail..." autocomplete="off" required="required">
+        </div>
+
+        <div class="pb-3">
+            <label for="password">Mot de passe</label>
+            <br>
+            <input class="form-control" id="password" type="password" name="password" placeholder="Entrez votre mot de passe..." autocomplete="off" required="required">
+        </div>
+
+        <button class="btn btn-primary btn-block" type="submit">Se connecter</button>
+    </form>
+
+    <div class="py-3">
+        <a href="{% url 'accounts:signup' %}">Je n'ai pas de compte...</a>
+    </div>
+</div>
+{% endblock %}
+

@@ -1,0 +1,128 @@
+{% extends 'store/base.html' %}
+{% load static %}
+
+{% block title %}
+Accueil
+{% endblock %}
+
+{% block active_accueil%}
+active
+{% endblock %}
+
+{% block content %}
+<div class="col-md-8 offset-md-2 py-3">
+    <div class="text-center py-2">
+        <img src="{% static 'store/images/Logo.png'%}" alt="Logo Bio & Terre" width="250" height="250">
+    </div>
+    <h2>Faites vos achats en ligne chez Bio & Terre !</h2>
+    <p>Nous vous permettons de consommer local et bio sans bouger de votre canapé ! </p>
+    <p>Commandez vos produits directement
+        depuis notre site internet et profitez d'une livraison à domicile si vous habitez à moins de 20 kilomètres de
+        Lannion.</p>
+    <p>Si vous habitez plus loin, pas de problème, vous pourrez aller chercher votre commande en magasin 2 heures après
+        l'avoir passée.</p>
+</div>
+
+<div class="col-md-8 offset-md-2 py-3">
+    <h3>Voici certains de nos produits qui pourraient vous faire craquer !</h3>
+</div>
+
+<div class="carousel slide" id="carouselPopularItems" data-bs-touch="false" data-bs-interval="false">
+    <div class="carousel-inner">
+        {% for produit in produits %}
+        {% if forloop.first %}
+            <div class="carousel-item active">
+            <div class="row gx-3 h-100 align-items-center">
+        {% endif %}
+                <div class="col-sm-6 col-md-4 col-xl mb-5 h-100" style="width: 50rem; min-height: 25rem; max-height: 25rem;">
+                    <div class="card card-span p-3 h-100 rounded-3">
+                        <a href="{% url 'store:produit_detail' produit.id %}">
+                            <img class="img-fluid rounded-3 h-100" style="min-height:10rem; min-width: 10rem; max-height:10rem; max-width: 10rem;" src="{{ produit.image }}" alt="{{ produit.nom }}">
+                        </a>
+                        <div class="card-body ps-0">
+                            <h5 class="fw-bold text-truncate mb-1" style="width: 12rem;">{{ produit.nom }}</h5>
+                            <p class="text-muted text-truncate" style="width: 12rem;">{{ produit.marque.nom }}</p>
+                            <span class="fw-bold">{{ produit.calcTVA }}€/{{ produit.getPoids }}</span>
+                            <br>
+                            <span class="text-muted">{{ produit.calcPrixPoids }}</span>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <a class="btn btn-lg btn-outline-dark" href="{% url 'store:produit_detail' produit.id %}" role="button">Acheter</a>
+                    </div>
+                </div>
+                {% if forloop.counter|divisibleby:5 %}
+                    </div>
+                </div>
+                <div class="carousel-item" data-bs-interval="3000">
+                    <div class="row gx-3 h-100 align-items-center">
+                {% endif %}
+                {% endfor %}
+            </div>
+            <button class="carousel-control-prev carousel-icon" type="button" data-bs-target="#carouselPopularItems"
+                data-bs-slide="prev">
+                <span class="carousel-control-prev-icon hover-top-shadow" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next carousel-icon" type="button" data-bs-target="#carouselPopularItems"
+                data-bs-slide="next">
+                <span class="carousel-control-next-icon hover-top-shadow" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+<!--
+<div id="carouselExampleControls" class="carousel py-2" data-bs-ride="carousel">
+    <div class="carousel-inner">
+        {% for produit in produits %}
+        {% if forloop.first %}
+        <div class="carousel-item active">
+            {% else %}
+            <div class="carousel-item">
+                {% endif %}
+                <div class="card text-center">
+                    <div class="img-wrapper"><img src="{{ produit.image }}" class="" alt="{{ produit.nom }}" width="200"
+                            height="200"> </div>
+                    <div class="card-body">
+                        <h5 class="card-title">{{ produit.nom }}</h5>
+                        <p class="card-text text-muted">{{ produit.marque.nom }}</p>
+                        <div class="d-flex">
+                            <div class="px-2">
+                                <h6 class="card-text">{{ produit.calcTVA }}€/{{ produit.getPoids }}</h6>
+                                <p class="card-text text-muted">{{ produit.calcPrixPoids }}</p>
+                            </div>
+                            <div class="px-2">
+                                <a href="{ url 'store:detail' produit.id %}" class="btn btn-dark">Acheter</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <button class="carousel-control-prev bg-secondary" type="button" data-bs-target="#carouselExampleControls"
+            data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next bg-secondary" type="button" data-bs-target="#carouselExampleControls"
+            data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>-->
+    {% endblock %}
+
+    {% block linkJs %}
+    <script type="text/javascript" src="{% static 'js/carousel.js' %}"></script>
+    {% endblock %}

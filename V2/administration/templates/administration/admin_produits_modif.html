@@ -1,0 +1,313 @@
+{% extends 'administration/admin_base.html' %}
+
+{% block title %}
+Modif prod
+{% endblock %}
+
+{% block active_produits %}
+active
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 offset-md-2 pt-5">
+    <div class="py-3">
+        <h3>Modifier le produit</h3>
+        <hr>
+        <!--
+        Nom
+        <input class="form-control" id="name" type="text" placeholder="{{ produit.nom}}" autocomplete="off">
+
+        <br>
+
+        Prix (Hors-Taxe)
+        <input class="form-control" id="prix" type="number" step="0.01" min="0" placeholder="{{ produit.prix }}"
+            autocomplete="off">
+
+        <br>
+
+        Description
+        <textarea class="form-control" id="description" placeholder="{{ produit.descript }}"
+            autocomplete="off"></textarea>
+
+
+        <br>
+
+        Image
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="col-md-10">
+                <input class="form-control" id="image" type="text" placeholder="{{ produit.image }}"
+                    autocomplete="off">
+            </div>
+            <div class="col-md-2">
+                <img id="previsu_image" src="{{ produit.image }}" alt="Image du produit" title="Pré-visualisation" width="100">
+            </div>
+        </div>
+
+
+        <br>
+
+        Marque
+        <div class="dropdown pt-2">
+            <button class="btn btn-dark dropdown-toggle" type="button" id="marque" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                {{ produit.marque.nom}}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a id=-1 name="Nouvelle marque" class="dropdown-item dropdown-marque">Nouvelle marque</a></li>
+                {% for marque in marques %}
+                <li><a id="{{ marque.id }}" name="{{ marque.nom }}"
+                        class="dropdown-item dropdown-marque">{{ marque.nom }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="new-marque" class="py-3" style="display: none;">
+            <hr>
+            Nom
+            <input class="form-control input_new_marque" id="input_new_marque" type="text"
+                placeholder="Entrer le nom de la nouvelle marque..." autocomplete="off">
+        </div>
+
+        <br>
+
+        Catégorie
+        <div class="dropdown pt-2">
+            <button class="btn btn-dark dropdown-toggle" type="button" id="categorie" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                {{ produit.categorie.nom }}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a id=-1 name="Nouvelle catégorie" class="dropdown-item dropdown-categorie">Nouvelle catégorie</a>
+                </li>
+                {% for categorie in categories %}
+                <li><a id="{{ categorie.id }}" name="{{ categorie.nom }}"
+                        class="dropdown-item dropdown-categorie">{{ categorie.nom }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="new-categorie" class="py-3" style="display: none;">
+            <hr>
+            Nom
+            <input class="form-control input_new_categorie" id="input_new_categorie_nom" type="text"
+                placeholder="Entrer le nom de la nouvelle categorie..." autocomplete="off">
+
+            <br>
+
+            TVA
+            <input class="form-control input_new_categorie" id="input_new_categorie_tva" type="number" step="0.01"
+                min="0" placeholder="Entrer le taux tva de la nouvelle categorie..." autocomplete="off">
+
+            <br>
+
+            Image
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="col-md-10">
+                    <input class="form-control input_new_categorie" id="input_new_categorie_image" type="text"
+                        placeholder="Entrer l'URL de l'image de la nouvelle categorie..." autocomplete="off">
+                </div>
+                <div class="col-md-2">
+                    <img id="categorie-img" src="" alt="Entrer un lien pour afficher l'image" title="Pré-visualisation"
+                        width="100">
+                </div>
+            </div>
+
+        </div>
+
+        <br>
+
+        Type
+        <div class="dropdown pt-2">
+            <button id="type" class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false"></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a id=0 class="dropdown-item dropdown-type">Solide</a></li>
+                <li><a id=1 class="dropdown-item dropdown-type">Liquide</a></li>
+                <li><a id=2 class="dropdown-item dropdown-type">Unité</a></li>
+            </ul>
+        </div>
+
+        <div id="div_solide" class="py-3" style="display: none;">
+            <hr>
+            Quantité (en Kilogramme)
+            <input class="form-control input_solide" id="input_solide" type="number" step="0.01" min="0"
+                placeholder="Entrer la quantité ici..." autocomplete="off">
+        </div>
+        <div id="div_liquide" class="py-3" style="display: none;">
+            <hr>
+            Quantité (en Litre)
+            <input class="form-control input_liquide" id="input_liquide" type="number" step="0.01" min="0"
+                placeholder="Entrer la quantité ici..." autocomplete="off"></div>
+
+        <br>
+        <div class="text-center">
+            <button id="modif" class="btn btn-outline-warning">Modifier</button>
+        </div>-->
+
+        <form method="POST">
+            {% csrf_token %}
+
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning">
+                {{message}}
+            </div>
+            {% endfor %}
+            {% endif %}
+
+            <div class="pb-3">
+                <label for="nom">Nom</label>
+                <br>
+                <input class="form-control" id="nom" type="text" name="nom" value="{{ produit.nom }}"
+                    placeholder="Entrer le nom du produit..." autocomplete="off" required="required">
+            </div>
+            <div class="pb-3">
+                <label for="prix">Prix (Hors-Taxe)</label>
+                <br>
+                <input class="form-control" id="prix" type="number" step="0.01" min="0" value="{{ produit.prix }}"
+                    name="prix" placeholder="Entrer le prix du produit..." autocomplete="off" required="required">
+            </div>
+            <div class="pb-3">
+                <label for="stock">Quantité en stock</label>
+                <br>
+                <input class="form-control" id="stock" type="number" step="1" min="0" value="{{ produit.stock }}"
+                    name="stock" placeholder="Entrer la quantité en stock du produit..." autocomplete="off"
+                    required="required">
+            </div>
+            <div class="pb-3">
+                <label for="description">Description</label>
+                <br>
+                <textarea class="form-control" id="description" type="text" name="description"
+                    placeholder="Entrer la description du produit..." autocomplete="off"
+                    required="required">{{ produit.description }}</textarea>
+            </div>
+            <div class="pb-3">
+                <label for="image">Image</label>
+                <br>
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="col-md-9">
+                        <input class="form-control input_new_categorie" id="image_produit" type="text"
+                            value="{{ produit.image }}" name="image" placeholder="Entrer l'URL de l'image du produit..."
+                            autocomplete="off" required="required">
+                    </div>
+                    <div class="col-md-2 offset-md-1 border border-dark">
+                        <img id="produit-img" src="" alt="Entrer un lien pour afficher l'image"
+                            title="Pré-visualisation" width="100">
+                    </div>
+                </div>
+            </div>
+            <div class="pb-3">
+                <label for="marque">Marque</label>
+                <br>
+                <select class="form-select" name="marque" id="marque">
+                    <option value="-1" selected>Nouvelle marque</option>
+                    {% for marque in marques %}
+                    {% if marque.id == produit.marque.id %}
+                    <option value="{{ marque.id }}" selected>{{marque.nom}}</option>
+                    {% else %}
+                    <option value="{{ marque.id }}">{{marque.nom}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+
+                <div id="new_marque" class="py-3" style="display: none;">
+                    <hr>
+                    Nom
+                    <input class="form-control" name="marque_nom" id="marque_nom" type="text"
+                        placeholder="Entrer le nom de la nouvelle marque..." autocomplete="off">
+                    <br>
+                    <hr>
+                </div>
+            </div>
+            <div class="pb-3">
+                <label for="categorie">Catégorie</label>
+                <br>
+                <select class="form-select" name="categorie" id="categorie">
+                    <option value="-1">Nouvelle categorie</option>
+                    {% for categorie in categories %}
+                    {% if categorie.id == produit.categorie.id %}
+                    <option value="{{ categorie.id }}" selected>{{categorie.nom}}</option>
+                    {% else %}
+                    <option value="{{ categorie.id }}">{{categorie.nom}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+
+                <div id="new_categorie" class="py-3" style="display: none;">
+                    <hr>
+                    Nom
+                    <input class="form-control" name="categorie_nom" id="categorie_nom" type="text"
+                        placeholder="Entrer le nom de la nouvelle categorie..." autocomplete="off">
+
+                    <br>
+
+                    TVA
+                    <input class="form-control" name="categorie_tva" id="categorie_tva" type="number" step="0.01"
+                        min="0" placeholder="Entrer le taux tva de la nouvelle categorie..." autocomplete="off">
+
+                    <br>
+
+                    Image
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div class="col-md-9">
+                            <input class="form-control" id="image_categorie" type="text" name="categorie_image"
+                                placeholder="Entrer l'URL de l'image de la nouvelle categorie..." autocomplete="off">
+                        </div>
+                        <div class="col-md-2 offset-md-1 border border-dark">
+                            <img id="categorie-img" src="" alt="Entrer un lien pour afficher l'image"
+                                title="Pré-visualisation" width="100">
+                        </div>
+                    </div>
+                    <hr>
+                </div>
+            </div>
+            <div class="pb-3">
+                <label for="type">Type</label>
+                <br>
+                <select class="form-select" name="type" id="type">
+                    {% for type in types %}
+                    {% if type.id == produit.type.id %}
+                    <option value="{{ type.id }}" selected>{{type.nom}}</option>
+                    {% else %}
+                    <option value="{{ type.id }}">{{type.nom}}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+                <div id="div_liquide" class="py-3" style="display: none;">
+                    <hr>
+                    Quantité (en Litre)
+                    <input class="form-control" id="liquide" name="liquide" type="number" step="0.01" min="0"
+                        placeholder="Entrer la quantité ici..." autocomplete="off">
+                        <script>
+                            if("{{produit.type.id}}" == 3){
+                                document.getElementById("liquide").value = "{{produit.quantite}}"
+                            }
+                        </script>
+                </div>
+                <div id="div_solide" class="py-3" style="display: none;">
+                    <hr>
+                    Quantité (en Kilogramme)
+                    <input class="form-control" id="solide" name="solide" type="number" step="0.001" min="0"
+                        placeholder="Entrer la quantité ici..." autocomplete="off">
+                        <script>
+                            if("{{produit.type.id}}" == 2){
+                                document.getElementById("solide").value = "{{produit.quantite}}"
+                            }
+                        </script>
+                </div>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-outline-warning" type="submit">Modifier</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+{% load static %}
+<script src="{% static 'administration/js/image_produit.js' %}"></script>
+<script src="{% static 'administration/js/image_categorie.js' %}"></script>
+<script src="{% static 'administration/js/choix_interactif_produit.js' %}"></script>
+{% endblock %}

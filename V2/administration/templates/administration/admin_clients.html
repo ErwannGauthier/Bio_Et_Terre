@@ -1,0 +1,41 @@
+{% extends 'administration/admin_base.html' %}
+
+{% block title %}
+Clients
+{% endblock %}
+
+{% block active_clients %}
+active
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-10 offset-md-1 pt-5">
+    <div class="py-3">
+        <h3>Tous les clients</h3>
+        <hr>
+        <table class="table table-striped table-hover text-center">
+            <thead class="table table-dark">
+                <th>ID</th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>A rejoint le</th>
+                <th>Dernière connexion</th>
+            </thead>
+            <tbody>
+                {% for client in clients %}
+                <tr>
+                    <td>{{ client.id}}</td>
+                    <td>{{ client.first_name|title }}</td>
+                    <td>{{ client.last_name|upper }}</td>
+                    <td><a href="mailto:{{ client.email }}">{{ client.email }}</a></td>
+                    <td>{{ client.date_joined }}</td>
+                    <td>{{ client.last_login }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

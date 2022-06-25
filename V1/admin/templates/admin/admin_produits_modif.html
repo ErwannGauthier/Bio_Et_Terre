@@ -1,0 +1,413 @@
+{% extends 'admin/admin_base.html' %}
+
+{% block title %}
+Modif prod
+{% endblock %}
+
+{% block active_produits %}
+active
+{% endblock %}
+
+{% block content %}
+
+<div class="col-md-8 offset-md-2 pt-5">
+    <div class="py-3">
+        <h3>Modifier le produit</h3>
+        <hr>
+        Nom
+        <input class="form-control" id="name" type="text" placeholder="{{ produit.nom}}" autocomplete="off">
+
+        <br>
+
+        Prix (Hors-Taxe)
+        <input class="form-control" id="prix" type="number" step="0.01" min="0" placeholder="{{ produit.prix }}"
+            autocomplete="off">
+
+        <br>
+
+        Description
+        <textarea class="form-control" id="description" placeholder="{{ produit.descript }}"
+            autocomplete="off"></textarea>
+
+
+        <br>
+
+        Image
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="col-md-10">
+                <input class="form-control" id="image" type="text" placeholder="{{ produit.image }}"
+                    autocomplete="off">
+            </div>
+            <div class="col-md-2">
+                <img id="previsu_image" src="{{ produit.image }}" alt="Image du produit" title="Pré-visualisation" width="100">
+            </div>
+        </div>
+
+
+        <br>
+
+        Marque
+        <div class="dropdown pt-2">
+            <button class="btn btn-dark dropdown-toggle" type="button" id="marque" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                {{ produit.marque.nom}}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a id=-1 name="Nouvelle marque" class="dropdown-item dropdown-marque">Nouvelle marque</a></li>
+                {% for marque in marques %}
+                <li><a id="{{ marque.id }}" name="{{ marque.nom }}"
+                        class="dropdown-item dropdown-marque">{{ marque.nom }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="new-marque" class="py-3" style="display: none;">
+            <hr>
+            Nom
+            <input class="form-control input_new_marque" id="input_new_marque" type="text"
+                placeholder="Entrer le nom de la nouvelle marque..." autocomplete="off">
+        </div>
+
+        <br>
+
+        Catégorie
+        <div class="dropdown pt-2">
+            <button class="btn btn-dark dropdown-toggle" type="button" id="categorie" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                {{ produit.categorie.nom }}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a id=-1 name="Nouvelle catégorie" class="dropdown-item dropdown-categorie">Nouvelle catégorie</a>
+                </li>
+                {% for categorie in categories %}
+                <li><a id="{{ categorie.id }}" name="{{ categorie.nom }}"
+                        class="dropdown-item dropdown-categorie">{{ categorie.nom }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div id="new-categorie" class="py-3" style="display: none;">
+            <hr>
+            Nom
+            <input class="form-control input_new_categorie" id="input_new_categorie_nom" type="text"
+                placeholder="Entrer le nom de la nouvelle categorie..." autocomplete="off">
+
+            <br>
+
+            TVA
+            <input class="form-control input_new_categorie" id="input_new_categorie_tva" type="number" step="0.01"
+                min="0" placeholder="Entrer le taux tva de la nouvelle categorie..." autocomplete="off">
+
+            <br>
+
+            Image
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="col-md-10">
+                    <input class="form-control input_new_categorie" id="input_new_categorie_image" type="text"
+                        placeholder="Entrer l'URL de l'image de la nouvelle categorie..." autocomplete="off">
+                </div>
+                <div class="col-md-2">
+                    <img id="categorie-img" src="" alt="Entrer un lien pour afficher l'image" title="Pré-visualisation"
+                        width="100">
+                </div>
+            </div>
+
+        </div>
+
+        <br>
+
+        Type
+        <div class="dropdown pt-2">
+            <button id="type" class="btn btn-dark dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                aria-expanded="false"></button>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <li><a id=0 class="dropdown-item dropdown-type">Solide</a></li>
+                <li><a id=1 class="dropdown-item dropdown-type">Liquide</a></li>
+                <li><a id=2 class="dropdown-item dropdown-type">Unité</a></li>
+            </ul>
+        </div>
+
+        <div id="div_solide" class="py-3" style="display: none;">
+            <hr>
+            Quantité (en Kilogramme)
+            <input class="form-control input_solide" id="input_solide" type="number" step="0.01" min="0"
+                placeholder="Entrer la quantité ici..." autocomplete="off">
+        </div>
+        <div id="div_liquide" class="py-3" style="display: none;">
+            <hr>
+            Quantité (en Litre)
+            <input class="form-control input_liquide" id="input_liquide" type="number" step="0.01" min="0"
+                placeholder="Entrer la quantité ici..." autocomplete="off"></div>
+
+        <br>
+        <div class="text-center">
+            <button id="modif" class="btn btn-outline-warning">Modifier</button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script %}
+<script>
+    function getToken(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+
+    const csrftoken = getToken('csrftoken');
+
+    const url = "{% url 'admin:update' %}";
+    var url_redirection = "{% url 'admin:produits' %}"
+
+    // VARIABLE PRODUIT
+    var prod_id = "{{ produit.id }}";
+    var prod_qtt = "{{ produit.qtt_stock }}"
+    var prod_nom = "{{ produit.nom }}";
+    var prod_prix = "{{ produit.prix }}";
+    var prod_descript = "{{ produit.descript }}";
+    var prod_image = "{{ produit.image }}";
+    var prod_marque = "{{ produit.marque.id }}";
+    var prod_categorie = "{{ produit.categorie.id }}";
+    var prod_new_marque = "vide";
+    var prod_new_categorie_nom = "vide";
+    var prod_new_categorie_tva = 0;
+    var prod_new_categorie_image = "vide";
+    var prod_type;
+    var prod_type_qtt = "{{ produit.getQttType }}"
+
+    // VARIABLES INPUT
+    var input_nom = document.getElementById("name");
+    var input_prix = document.getElementById("prix");
+    var input_descript = document.getElementById("description");
+    var input_image = document.getElementById("image");
+
+    // VARIABLE BOUTON MODIFICATION
+    var modif = document.getElementById("modif");
+
+    // FUNCTION ACTIVE OU NON LE BOUTON MODIFIER
+    function verif_inputs(inputs) {
+        var res = true;
+        for (var i = 0; i < inputs.length; i++) {
+            if (inputs[i].value == "") {
+                res = false;
+                break;
+            }
+        }
+
+        if (res) {
+            modif.disabled = false;
+        } else {
+            modif.disabled = true;
+        }
+    }
+
+    // LISTENER IMAGE PRODUIT INTERACTIVE
+    input_image.addEventListener('input', function () {
+        var previsu_image = document.getElementById("previsu_image");
+        previsu_image.src = this.value;
+        previsu_image.alt = "Erreur de chargement de l'image."
+    })
+
+    // VARIABLES BOUTONS MARQUE
+    var btn_marque = document.getElementById("marque");
+    var input_marque = document.getElementsByClassName("dropdown-marque");
+    // LISTENER LORS DU CHOIX DE MARQUE
+    for (var i = 0; i < input_marque.length; i++) {
+        input_marque[i].addEventListener('click', function () {
+            prod_marque = this.id;
+            btn_marque.textContent = this.name;
+
+            if (this.id == -1) {
+                div_new_marque.style = "display: true;";
+                modif.disabled = true;
+            } else {
+                div_new_marque.style = "display: none;";
+                modif.disabled = false;
+            }
+        });
+    }
+
+    // VARIABLES SI NOUVELLE MARQUE
+    var div_new_marque = document.getElementById("new-marque");
+    var inputs_new_marque = document.getElementsByClassName("input_new_marque");
+    // LISTENER VERIFIE TOUT LES CHAMPS SOSNT REMPLIS
+    for (var i = 0; i < inputs_new_marque.length; i++) {
+        inputs_new_marque[i].addEventListener('input', function () {
+            verif_inputs(inputs_new_marque);
+        });
+    }
+    var input_new_marque = document.getElementById("input_new_marque");
+
+
+    // VARIABLE BOUTON CATEGORIE
+    var btn_categorie = document.getElementById("categorie");
+    var input_categorie = document.getElementsByClassName("dropdown-categorie");
+    // LISTENER LORS DU CHOIX DE CATEGORIE
+    for (i = 0; i < input_categorie.length; i++) {
+        input_categorie[i].addEventListener('click', function () {
+            prod_categorie = this.id;
+            btn_categorie.textContent = this.name;
+
+            if (this.id == -1) {
+                div_new_categorie.style = "display: true;";
+                modif.disabled = true;
+            } else {
+                div_new_categorie.style = "display: none;";
+                modif.disabled = false;
+            }
+        });
+    }
+
+    // VARIABLES SI NOUVELLE CATEGORIE
+    var div_new_categorie = document.getElementById("new-categorie");
+    var inputs_new_categorie = document.getElementsByClassName("input_new_categorie");
+    // LISTENER VERIFIE TOUT LES CHAMPS SOSNT REMPLIS
+    for (var i = 0; i < inputs_new_categorie.length; i++) {
+        inputs_new_categorie[i].addEventListener('input', function () {
+            verif_inputs(inputs_new_categorie);
+        });
+    }
+    var input_new_categorie_nom = document.getElementById("input_new_categorie_nom");
+    var input_new_categorie_tva = document.getElementById("input_new_categorie_tva");
+    var input_new_categorie_image = document.getElementById("input_new_categorie_image");
+    // LISTENER IMAGE CATEGORIE INTERACTIVE
+    input_new_categorie_image.addEventListener('input', function () {
+        var categorie_img = document.getElementById("categorie-img");
+        categorie_img.src = this.value;
+        categorie_img.alt = "Erreur de chargement de l'image."
+    })
+
+    // VARIABLES BOUTON TYPE
+    var btn_type = document.getElementById("type");
+    var div_solide = document.getElementById("div_solide");
+    var input_solide = document.getElementById("input_solide");
+    var div_liquide = document.getElementById("div_liquide");
+    var input_liquide = document.getElementById("input_liquide");
+
+
+    // INITIALISATION VARIABLES TYPE
+    if ("{{ produit.calcPrixType.1 }}" == "Kilo") {
+        prod_type = 0;
+        btn_type.textContent = "Solide";
+        div_solide.style = "display: true;";
+        input_solide.placeholder = prod_type_qtt;
+    } else if ("{{ produit.calcPrixType.1 }}" == "Litre") {
+        prod_type = 1;
+        btn_type.textContent = "Liquide";
+        div_liquide.style = "display: true;";
+        input_liquide.placeholder = prod_type_qtt;
+    } else {
+        prod_type = 2;
+        btn_type.textContent = "Unité";
+    }
+
+    var prod_type_init = prod_type;
+
+    // LISTENER AFFICHE INPUTS EN FONCTION DU CHOIX
+    var input_type = document.getElementsByClassName("dropdown-type");
+    for (var i = 0; i < input_type.length; i++) {
+        input_type[i].addEventListener('click', function () {
+            prod_type = this.id;
+            if (this.id == 0) {
+                btn_type.textContent = "Solide";
+                div_solide.style = "display: true;";
+                div_liquide.style = "display: none;";
+            } else if (this.id == 1) {
+                btn_type.textContent = "Liquide";
+                div_solide.style = "display: none;";
+                div_liquide.style = "display: true;";
+            } else {
+                btn_type.textContent = "Unité";
+                div_solide.style = "display: none;";
+                div_liquide.style = "display: none;";
+            }
+        });
+    }
+
+    // VERIFICATION DES VARIABLES AVANT VALIDATION
+    modif.addEventListener('click', function () {
+        if (input_nom.value != "") {
+            prod_nom = input_nom.value;
+        }
+        if (input_prix.value != "") {
+            prod_prix = input_prix.value;
+        }
+        if (input_descript.value != "") {
+            prod_descript = input_descript.value;
+        }
+        if (input_image.value != "") {
+            prod_image = input_image.value;
+        }
+        if (prod_marque == -1) {
+            prod_new_marque = input_new_marque.value;
+        }
+        if (prod_categorie == -1) {
+            prod_new_categorie_nom = input_new_categorie_nom.value;
+            prod_new_categorie_tva = input_new_categorie_tva.value;
+            prod_new_categorie_image = input_new_categorie_image.value;
+        }
+        if (prod_type == 0) {
+            if (input_solide.value != "") {
+                prod_type_qtt = input_solide.value;
+            }
+        } else if (prod_type == 1) {
+            if (input_liquide.value != "") {
+                prod_type_qtt = input_liquide.value;
+            }
+        }
+
+        var changer = !(prod_nom == "{{ produit.nom }}" && prod_prix == "{{ produit.prix }}" && prod_descript ==
+            "{{ produit.descript }}" && prod_image == "{{ produit.image }}" && prod_marque ==
+            "{{ produit.marque.id }}" && prod_categorie == "{{ produit.categorie.id }}" && prod_type ==
+            prod_type_init && prod_type_qtt == "{{ produit.getQttType }}")
+
+        update(changer);
+    });
+
+    function update(changer) {
+        fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken,
+                },
+                body: JSON.stringify({
+                    'id': prod_id,
+                    'nom': prod_nom,
+                    'prix': prod_prix.replaceAll(',', '.'),
+                    'qtt_stock': prod_qtt,
+                    'descript': prod_descript.toString(),
+                    'image': prod_image.replaceAll('&amp;', '&'),
+                    'marque': prod_marque,
+                    'new_marque': prod_new_marque,
+                    'categorie': prod_categorie,
+                    'new_categorie_nom': prod_new_categorie_nom,
+                    'new_categorie_tva': prod_new_categorie_tva,
+                    'new_categorie_image': prod_new_categorie_image.replaceAll('&amp;', '&'),
+                    'type': prod_type,
+                    'type_qtt': prod_type_qtt.replaceAll(',', '.'),
+                    'changer': changer
+                })
+            })
+
+            .then((response) => {
+                return response.json()
+            })
+
+            .then((data) => {
+                location.replace(url_redirection)
+            })
+    }
+</script>
+{% endblock %}
